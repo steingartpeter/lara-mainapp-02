@@ -232,7 +232,8 @@ class UserController extends Controller
     $thePosts = $user->posts()->latest()->get();
     View::share('sharedData', [
       'usrNm' => $user->username, 'posts' => $thePosts,
-      'postCount' => $thePosts->count(), 'avatar' => $user->avatar, 'currentlyFollowing' => $currentlyFollowing
+      'postCount' => $thePosts->count(), 'avatar' => $user->avatar, 'currentlyFollowing' => $currentlyFollowing,
+      'followerCount' => $user->followers()->count(), 'followingCount' => $user->followingTheseUsers()->count()
     ]);
   }
 }
