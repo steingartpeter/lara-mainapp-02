@@ -6,7 +6,8 @@
       @foreach ($posts as $post)
         <a href="/post/{{$post->id}}" class="list-group-item list-group-item-action">
           <img class="avatar-tiny" src="{{$post->getUser->avatar}}" />
-          <strong>{{$post->post_title}}</strong> on {{$post->created_at->format('d/m/Y')}}
+          <strong>{{$post->post_title}}</strong> <span class="text-muted small"> by {{$post->getUser->username}}
+            on  {{$post->created_at->format('d/m/Y')}}</span>
         </a>
       @endforeach
       </div>
