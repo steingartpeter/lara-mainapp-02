@@ -1,10 +1,7 @@
-<x-profile :sharedData="$sharedData">
+<x-profile :sharedData="$sharedData" doctitle="{{$sharedData['usrNm']}}'s profile">
 <div class="list-group">
   @foreach ($posts as $post)
-    <a href="/post/{{$post->id}}" class="list-group-item list-group-item-action">
-      <img class="avatar-tiny" src="{{$post->getUser->avatar}}" />
-      <strong>{{$post->post_title}}</strong> on {{$post->created_at->format('d/m/Y')}}
-    </a>
+    <x-post :post="$post" hideAuthor="1"/>
   @endforeach
   </div>
 </x-profile>

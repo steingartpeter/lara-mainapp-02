@@ -117,4 +117,14 @@ class PostController extends Controller
   {
     return view('edit-post', ['post' => $post]);
   }
+
+  public function search($term)
+  {
+    // We need composer to add SCOUT.
+    // Then extent Post model with include Searchable, and with toSearchableArray() method.
+    // Then we have to register SCOUT_DRIVER in .env file
+    $posts = Post::search($term)->get();
+    $posts->load('getUser:id,username,avatar');
+    return $posts;
+  }
 }
