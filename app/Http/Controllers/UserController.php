@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\OurExampleEvent;
 use App\Models\Follow;
 use App\Models\Post;
 use App\Models\User;
@@ -43,6 +44,7 @@ class UserController extends Controller
     //</nn>
     if (auth()->attempt(['username' => $incomingFields['loginusername'], 'password' => $incomingFields['loginpassword']])) {
       $request->session()->regenerate();
+      event(new OurExampleEvent(['username' => auth()->user()->username, 'action' => 'login']));
       return redirect('/')->with('success', 'You\'ve successfully logged in');
       //return 'Login successful!!!';
     } else {
@@ -130,6 +132,7 @@ class UserController extends Controller
     // @-- ... -@
     //-×
     //</SF>
+    event(new OurExampleEvent(['username' => auth()->user()->username, 'action' => 'logout']));
     auth()->logout();
     return redirect('/')->with('success', 'You are now logged out');
   }
@@ -235,5 +238,21 @@ class UserController extends Controller
       'postCount' => $thePosts->count(), 'avatar' => $user->avatar, 'currentlyFollowing' => $currentlyFollowing,
       'followerCount' => $user->followers()->count(), 'followingCount' => $user->followingTheseUsers()->count()
     ]);
+  }
+
+  public function profileRaw(User $user)
+  {
+
+    return response()->json(['theHTML' => view('profile-posts-only', ['posts' => $user->posts()->latest()->get()])->render(), 'docTitle' => $user->username . "'s profile"]);
+  }
+
+  public function profileFollowersRaw(User $user)
+  {
+    return response()->json(['theHTML' => view('profile-followers-only', ['followers' => $user->followers()->latest()->get()])->render(), 'docTitle' => $user->username . "'s followers"]);
+  }
+
+  public function profileFollowingRaw(User $user)
+  {
+    return response()->json(['theHTML' => view('profile-following-only', ['following' => $user->followingTheseUsers()->latest()->get()])->render(), 'docTitle' => 'Who ' . $user->username . " follows"]);
   }
 }
